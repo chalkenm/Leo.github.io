@@ -10,10 +10,12 @@
             background: linear-gradient(to bottom right, #ebf8ff, #ede9fe);
             min-height: 100vh;
             padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .board-container {
-            max-width: 64rem;
-            margin: auto;
+            width: 32rem;
             border-radius: 1rem;
             overflow: hidden;
             background-color: white;
@@ -26,18 +28,31 @@
             -webkit-background-clip: text;
             color: transparent;
             background-image: linear-gradient(to right, #2563eb, #7c3aed);
+            text-align: center;
+        }
+        .bingo-board {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.5rem;
+            padding: 1rem;
         }
         .bingo-cell {
             transition: all 0.3s ease;
             border: 2px solid #e5e7eb;
             border-radius: 0.5rem;
-            overflow: hidden;
             position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            height: 90px; /* Fixed height for uniformity */
+            width: 100%;
+            aspect-ratio: 1 / 1; /* Square cells */
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 0.5rem;
+            overflow: hidden;
+            user-select: none;
         }
         .bingo-cell:hover {
             border-color: #60a5fa;
@@ -55,29 +70,42 @@
             font-weight: bold;
             opacity: 0.4;
         }
+        .reset-button {
+            display: block;
+            margin: 1rem auto 0;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+            background-color: white;
+            color: #2563eb;
+        }
+        .reset-button:hover {
+            border-color: #60a5fa;
+            background-color: #dbeafe;
+        }
     </style>
 </head>
 <body>
     <div class="board-container">
-        <div class="p-8">
-            <div class="flex justify-between items-center mb-8">
-                <h1 id="bingoTitle" class="board-title">Friend Bingo</h1>
-                <button onclick="resetBoard()" class="flex items-center gap-2 border-2 border-gray-300 px-4 py-2 rounded-lg hover:border-blue-400">
-                    🔄 Reset Board
-                </button>
-            </div>
-
-            <div class="grid grid-cols-5 gap-3" id="bingoBoard"></div>
+        <div class="p-6">
+            <h1 id="bingoTitle" class="board-title mb-4">Friend Bingo</h1>
+            <div id="bingoBoard" class="bingo-board"></div>
+            <button onclick="resetBoard()" class="reset-button">🔄 Reset Board</button>
         </div>
     </div>
 
     <script>
         const phrases = [
             "That's crazy!", "Actually...", "Back in my day", "Trust me", "No way",
-            "I'm just saying", "Listen...", "You know what?", "exactly", "For real though",
-            "To be honest", "I mean...", "Free spot", "you suck", "Seriously",
-            "What if...", "Remember when", "die", "asshole", "will",
-            "this", "f u", "I HAT YOU", "You won't believe", "KYS"
+            "I'm just saying", "Listen...", "You know what?", "Exactly", "For real though",
+            "To be honest", "I mean...", "FREE SPOT", "You suck", "Seriously",
+            "What if...", "Remember when", "Die", "Asshole", "Will",
+            "This", "F U", "I HATE YOU", "You won't believe", "KYS"
         ];
 
         let selectedCells = JSON.parse(localStorage.getItem('bingoSelections')) || Array(25).fill(false);
@@ -97,7 +125,7 @@
                 const cell = document.createElement('div');
                 cell.className = `bingo-cell ${selectedCells[index] ? 'selected' : ''}`;
                 cell.innerHTML = `
-                    <div class="text-center leading-tight">${phrase}</div>
+                    <div>${phrase}</div>
                     ${selectedCells[index] ? '<div class="bingo-mark">✕</div>' : ''}
                 `;
                 cell.onclick = () => toggleCell(index);
