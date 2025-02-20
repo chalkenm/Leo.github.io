@@ -5,14 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Friend Bingo</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(to bottom right, #ebf8ff, #ede9fe);
+            min-height: 100vh;
+            padding: 1.5rem;
+        }
+        .board-container {
+            max-width: 64rem;
+            margin: auto;
+            border-radius: 1rem;
+            overflow: hidden;
+            background-color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .board-title {
+            font-size: 2.25rem;
+            font-weight: bold;
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            background-image: linear-gradient(to right, #2563eb, #7c3aed);
+        }
+        .bingo-cell {
+            transition: all 0.3s ease;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .bingo-cell:hover {
+            border-color: #60a5fa;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .bingo-cell.selected {
+            background-color: #dbeafe;
+            border-color: #60a5fa;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .bingo-mark {
+            position: absolute;
+            font-size: 2.5rem;
+            color: #3b82f6;
+            font-weight: bold;
+            opacity: 0.4;
+        }
+    </style>
 </head>
-<body class="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-6">
-    <div class="max-w-4xl mx-auto shadow-xl bg-white rounded-xl overflow-hidden">
+<body>
+    <div class="board-container">
         <div class="p-8">
             <div class="flex justify-between items-center mb-8">
-                <h1 id="bingoTitle" class="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
-                    Friend Bingo
-                </h1>
+                <h1 id="bingoTitle" class="board-title">Friend Bingo</h1>
                 <button onclick="resetBoard()" class="flex items-center gap-2 border-2 border-gray-300 px-4 py-2 rounded-lg hover:border-blue-400">
                     🔄 Reset Board
                 </button>
@@ -38,9 +86,9 @@
         const updateTitle = () => {
             const bingoTitle = document.getElementById('bingoTitle');
             bingoTitle.textContent = checkForBingo() ? 'BINGO! 🎉' : 'Friend Bingo';
-            bingoTitle.className = checkForBingo() 
-                ? 'text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-orange-500'
-                : 'text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600';
+            bingoTitle.style.backgroundImage = checkForBingo()
+                ? 'linear-gradient(to right, #facc15, #fb923c)'
+                : 'linear-gradient(to right, #2563eb, #7c3aed)';
         };
 
         const renderBoard = () => {
@@ -48,13 +96,12 @@
             board.innerHTML = '';
             phrases.forEach((phrase, index) => {
                 const cell = document.createElement('div');
-                cell.className = `relative aspect-square rounded-lg flex items-center justify-center cursor-pointer transition-all duration-300 border-2 overflow-hidden 
-                    ${selectedCells[index] ? 'bg-blue-100 border-blue-400 shadow-inner' : 'bg-white border-gray-200 hover:border-blue-300 hover:shadow-md'}`;
+                cell.className = `bingo-cell ${selectedCells[index] ? 'selected' : ''}`;
                 cell.innerHTML = `
                     <div class="absolute inset-2 flex items-center justify-center">
                         <span class="text-xs sm:text-sm md:text-base font-medium text-center leading-tight break-words">${phrase}</span>
                     </div>
-                    ${selectedCells[index] ? '<div class="absolute inset-0 flex items-center justify-center pointer-events-none"><div class="text-4xl text-blue-500 font-bold opacity-40">✕</div></div>' : ''}
+                    ${selectedCells[index] ? '<div class="bingo-mark">✕</div>' : ''}
                 `;
                 cell.onclick = () => toggleCell(index);
                 board.appendChild(cell);
