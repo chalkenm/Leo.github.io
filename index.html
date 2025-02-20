@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Friend Bingo</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.0/dist/tailwind.min.css" rel="stylesheet">
     <style>
         body {
             background: linear-gradient(to bottom right, #ebf8ff, #ede9fe);
@@ -66,8 +66,8 @@
                 </button>
             </div>
 
-            <div class="relative aspect-square w-full">
-                <div class="absolute inset-0 grid grid-cols-5 gap-3" id="bingoBoard"></div>
+            <div class="relative w-full" style="height: 500px;">
+                <div class="grid grid-cols-5 gap-3 h-full" id="bingoBoard"></div>
             </div>
         </div>
     </div>
