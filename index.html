@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Friend Bingo</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.0/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.5/lib/tailwind.min.css" rel="stylesheet">
     <style>
         body {
             background: linear-gradient(to bottom right, #ebf8ff, #ede9fe);
@@ -37,6 +37,7 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            height: 90px; /* Fixed height for uniformity */
         }
         .bingo-cell:hover {
             border-color: #60a5fa;
@@ -66,9 +67,7 @@
                 </button>
             </div>
 
-            <div class="relative w-full" style="height: 500px;">
-                <div class="grid grid-cols-5 gap-3 h-full" id="bingoBoard"></div>
-            </div>
+            <div class="grid grid-cols-5 gap-3" id="bingoBoard"></div>
         </div>
     </div>
 
@@ -98,9 +97,7 @@
                 const cell = document.createElement('div');
                 cell.className = `bingo-cell ${selectedCells[index] ? 'selected' : ''}`;
                 cell.innerHTML = `
-                    <div class="absolute inset-2 flex items-center justify-center">
-                        <span class="text-xs sm:text-sm md:text-base font-medium text-center leading-tight break-words">${phrase}</span>
-                    </div>
+                    <div class="text-center leading-tight">${phrase}</div>
                     ${selectedCells[index] ? '<div class="bingo-mark">✕</div>' : ''}
                 `;
                 cell.onclick = () => toggleCell(index);
