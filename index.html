@@ -1,0 +1,115 @@
+Share
+
+
+You said:
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { RefreshCcw } from 'lucide-react';
+I miss that
+const BingoBoard = () => {
+  const phrases = [
+    "That's crazy!", "Actually...", "Back in my day", "Trust me", "No way",
+    "I'm just saying", "Listen...", "You know what?", "exactly", "For real though",
+    "To be honest", "I mean...", "Free spot", "you suck", "Seriously",
+    "What if...", "Remember when", "die", "asshole", "will",
+    "this", "f u", "I HAT YOU", "You won't believe", "KYS"
+  ];
+
+  const [selectedCells, setSelectedCells] = useState(() => {
+    const saved = localStorage.getItem('bingoSelections');
+    return saved ? JSON.parse(saved) : Array(25).fill(false);
+  });
+
+  useEffect(() => {
+    localStorage.setItem('bingoSelections', JSON.stringify(selectedCells));
+  }, [selectedCells]);
+
+  const handleCellClick = (index) => {
+    setSelectedCells(prev => {
+      const newSelections = [...prev];
+      newSelections[index] = !newSelections[index];
+      return newSelections;
+    });
+  };
+
+  const resetBoard = () => {
+    setSelectedCells(Array(25).fill(false));
+  };
+
+  const checkForBingo = () => {
+    // Check rows
+    for (let i = 0; i < 25; i += 5) {
+      if (selectedCells.slice(i, i + 5).every(cell => cell)) return true;
+    }
+
+    // Check columns
+    for (let i = 0; i < 5; i++) {
+      if ([0,1,2,3,4].every(j => selectedCells[i + j * 5])) return true;
+    }
+
+    // Check diagonals
+    if ([0,6,12,18,24].every(i => selectedCells[i])) return true;
+    if ([4,8,12,16,20].every(i => selectedCells[i])) return true;
+
+    return false;
+  };
+
+  const hasBingo = checkForBingo();
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-6">
+      <Card className="max-w-4xl mx-auto shadow-xl">
+        <CardContent className="p-8">
+          <div className="flex justify-between items-center mb-8">
+            <h1 className={text-4xl font-bold bg-clip-text text-transparent 
+              ${hasBingo ? 'bg-gradient-to-r from-yellow-400 to-orange-500' : 'bg-gradient-to-r from-blue-600 to-purple-600'}}>
+              {hasBingo ? "BINGO! 🎉" : "Friend Bingo"}
+            </h1>
+            <Button 
+              variant="outline" 
+              onClick={resetBoard}
+              className="flex items-center gap-2"
+            >
+              <RefreshCcw size={16} />
+              Reset Board
+            </Button>
+          </div>
+          
+          <div className="relative aspect-square w-full">
+            <div className="absolute inset-0 grid grid-cols-5 gap-3">
+              {phrases.map((phrase, index) => (
+                <div
+                  key={index}
+                  onClick={() => handleCellClick(index)}
+                  className={
+                    relative aspect-square rounded-lg
+                    flex items-center justify-center
+                    cursor-pointer transition-all duration-300
+                    border-2 overflow-hidden
+                    ${selectedCells[index] 
+                      ? 'bg-blue-100 border-blue-400 shadow-inner' 
+                      : 'bg-white border-gray-200 hover:border-blue-300 hover:shadow-md'}
+                  }
+                >
+                  <div className="absolute inset-2 flex items-center justify-center">
+                    <span className="text-xs sm:text-sm md:text-base font-medium text-center leading-tight break-words">
+                      {phrase}
+                    </span>
+                  </div>
+                  {selectedCells[index] && (
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                      <div className="text-4xl text-blue-500 font-bold opacity-40">✕</div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+export default BingoBoard;
